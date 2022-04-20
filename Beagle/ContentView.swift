@@ -86,13 +86,13 @@ struct ContentView: View {
     
     @State private var showingSheet = false
     @State var quotes: [quote] = [
-        quote(text: "It never gets better."),
-        quote(text: "You could've tried harder."),
-        quote(text: "You will never be the same."),
-        quote(text: "Avoid disappointment by giving up hope."),
-        quote(text: "This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one, This is a long one"),
+        quote(text: "I’ve always believed that you should never, ever give up and you should always keep fighting even when there’s only a slightest chance. – Michael Schumacher"),
+        quote(text: "Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma - which is living with the results of other people's thinking. Don't let the noise of other's opinions drown out your own inner voice. And most important, have the courage to follow your heart and intuition - Steve Jobs"),
+        quote(text: "Faith is taking the first step even when you don’t see the whole staircase. - Martin Luther King Jr"),
+        quote(text: "You miss 100% of the shots you don’t take – Wayne Gretzky"),
+        quote(text: "Keep your eyes on the stars, and your feet on the ground. ― Theodore Roosevelt")
     ]
-    @State var displayedQuote: String = "Press the button!"
+    @State var displayedQuote: String = ""
     
     var body: some View {
         NavigationView{
@@ -107,10 +107,11 @@ struct ContentView: View {
                     
                 }
                 .padding()
+                .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
                 .background(Color(red: 242/255, green: 242/255, blue: 247/255))
                 .clipShape(RoundedRectangle(cornerRadius: 30))
                 .foregroundColor(.black)
-                .frame(minWidth: 250, maxWidth: 500, minHeight: 0, maxHeight: 250)
+
                 Text("Shake for some motivation!").onShake {
                     withAnimation{
                         displayedQuote = quotes.randomElement()?.text ?? "Enter some quotes!"
