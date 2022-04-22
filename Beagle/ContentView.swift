@@ -20,17 +20,17 @@ extension UIDevice {
 
 //  Override the default behavior of shake gestures to send our notification instead.
 extension UIWindow {
-     open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             NotificationCenter.default.post(name: UIDevice.deviceDidShakeNotification, object: nil)
         }
-     }
+    }
 }
 
 // A view modifier that detects shaking and calls a function of our choosing.
 struct DeviceShakeViewModifier: ViewModifier {
     let action: () -> Void
-
+    
     func body(content: Content) -> some View {
         content
             .onAppear()
@@ -96,50 +96,78 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView{
-            VStack(spacing: 150){
+            ZStack{
+                Color.blue.ignoresSafeArea(.all)
                 
-                HStack{
-                    Image(systemName: "pawprint.circle")
-                    Divider()
-                    Text(displayedQuote)
-                    .transition(.opacity)
-                    .id("Quote" + displayedQuote)
-                    
+                Text("☁️")
+                    .font(.title)
+                    .offset(x: 120, y: -300)
+                Text("☁️")
+                    .font(.title)
+                    .offset(x: -120, y: -325)
+                
+                Color.green
+                    .frame(width: 500, height: 500)
+                    .offset(y: 150)
+                
+                
+                ZStack {
+                    SpeechBubble()
+                        .fill(.white)
+                    Text("Shake for some motivation!").padding(10)
                 }
-                .padding()
-                .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
-                .background(Color(red: 242/255, green: 242/255, blue: 247/255))
-                .clipShape(RoundedRectangle(cornerRadius: 30))
-                .foregroundColor(.black)
-
-                Text("Shake for some motivation!").onShake {
+                .frame(width: 300, height: 70)
+                .onShake {
                     withAnimation{
                         displayedQuote = quotes.randomElement()?.text ?? "Enter some quotes!"
                     }
                 }
-                .padding()
-                .background(Color.blue)
-                .clipShape(Capsule())
-                .foregroundColor(.white)
+                .foregroundColor(.black)
+                .offset(y:-200)
                 
-            }
-            .sheet(isPresented: $showingSheet){
-                quoteList(quotes: $quotes)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing){
-                Button{
-                    showingSheet.toggle()
-                } label: {
+                VStack(spacing: 150){
                     HStack{
-                    Text("Add Quotes")
-                    Image(systemName: "chevron.right")
+                        Image(systemName: "pawprint.circle")
+                        Divider()
+                        Text(displayedQuote)
+                            .transition(.opacity)
+                            .id("Quote" + displayedQuote)
+                    }
+                    .padding()
+                    .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
+                    .background(Color(red: 242/255, green: 242/255, blue: 247/255))
+                    .clipShape(RoundedRectangle(cornerRadius: 30))
+                    .foregroundColor(.black)
                 }
+                .offset(y: 150)
+                
+                Text("🐶")
+                    .font(.largeTitle)
+                    .offset(y: -100)
+                
+                
+                    .sheet(isPresented: $showingSheet){
+                        quoteList(quotes: $quotes)
+                    }
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing){
+                            Button{
+                                showingSheet.toggle()
+                            } label: {
+                                HStack{
+                                    Text("+")
+                                        .font(.title)
+                                }
+                                .padding()
+                                .background(Color.black)
+                                .foregroundColor(Color.white)
+                                .clipShape(Circle())
+                            }
+                        }
+                    }
             }
         }
-    }
-}
     }
 }
 
