@@ -93,6 +93,7 @@ struct ContentView: View {
         quote(text: "Keep your eyes on the stars, and your feet on the ground. ― Theodore Roosevelt")
     ]
     @State var displayedQuote: String = ""
+    @State var showingBone: Bool = false
     
     var body: some View {
         NavigationView{
@@ -119,27 +120,47 @@ struct ContentView: View {
                 .frame(width: 300, height: 70)
                 .onShake {
                     withAnimation{
-                        displayedQuote = quotes.randomElement()?.text ?? "Enter some quotes!"
+                        if !showingBone {
+                            displayedQuote = quotes.randomElement()?.text ?? ""
+                        }
+                        self.showingBone = true
                     }
                 }
                 .foregroundColor(.black)
                 .offset(y:-200)
                 
                 VStack(spacing: 150){
-                    HStack{
-                        Image(systemName: "pawprint.circle")
-                        Divider()
-                        Text(displayedQuote)
-                            .transition(.opacity)
-                            .id("Quote" + displayedQuote)
+                    
+                    if showingBone{
+                        HStack{
+                            Image(systemName: "pawprint.circle")
+                            Divider()
+                            Text(displayedQuote)
+                                .id("Quote" + displayedQuote)
+                        }
+                        .padding()
+                        .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
+                        .background(Color(red: 242/255, green: 242/255, blue: 247/255))
+                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                        .foregroundColor(.black)
+                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                        .offset(y: 175)
+                        
+                        Button{
+                            withAnimation{
+                                self.showingBone = false
+                                displayedQuote = ""
+                            }
+                        } label: {
+                            Image(systemName: "arrow.uturn.backward.circle.fill")
+                                .font(.largeTitle)
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.white, .black)
+                        }.offset(y: 75)
+                        
                     }
-                    .padding()
-                    .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
-                    .background(Color(red: 242/255, green: 242/255, blue: 247/255))
-                    .clipShape(RoundedRectangle(cornerRadius: 30))
-                    .foregroundColor(.black)
+                    
                 }
-                .offset(y: 150)
                 
                 Text("🐶")
                     .font(.largeTitle)
@@ -155,14 +176,10 @@ struct ContentView: View {
                             Button{
                                 showingSheet.toggle()
                             } label: {
-                                HStack{
-                                    Text("+")
-                                        .font(.title)
-                                }
-                                .padding()
-                                .background(Color.black)
-                                .foregroundColor(Color.white)
-                                .clipShape(Circle())
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.largeTitle)
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.white, .black)
                             }
                         }
                     }
