@@ -98,7 +98,8 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             ZStack{
-                Color.blue.ignoresSafeArea(.all)
+                
+                LinearGradient(gradient: Gradient(colors: [.blue, .yellow]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
                 
                 Text("☁️")
                     .font(.title)
@@ -107,7 +108,10 @@ struct ContentView: View {
                     .font(.title)
                     .offset(x: -120, y: -325)
                 
-                Color.green
+                LinearGradient(gradient: Gradient(colors: [
+                    .green,
+                    Color(red: 75/255, green: 134/255, blue: 112/255)
+                ]), startPoint: .top, endPoint: .bottom)
                     .frame(width: 500, height: 500)
                     .offset(y: 150)
                 
@@ -115,6 +119,7 @@ struct ContentView: View {
                 ZStack {
                     SpeechBubble()
                         .fill(.white)
+                        .shadow(color: .black, radius: 5, x: 5, y: 5)
                     Text("Shake for some motivation!").padding(10)
                 }
                 .frame(width: 300, height: 70)
@@ -142,6 +147,7 @@ struct ContentView: View {
                         .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
                         .background(Color(red: 242/255, green: 242/255, blue: 247/255))
                         .clipShape(RoundedRectangle(cornerRadius: 30))
+                        .shadow(color: .black, radius: 5, x: 5, y: 5)
                         .foregroundColor(.black)
                         .transition(.asymmetric(insertion: .scale, removal: .opacity))
                         .offset(y: 175)
@@ -156,6 +162,7 @@ struct ContentView: View {
                                 .font(.largeTitle)
                                 .symbolRenderingMode(.palette)
                                 .foregroundStyle(.white, .black)
+                                .shadow(color: .black, radius: 5, x: 5, y: 5)
                         }.offset(y: 75)
                         
                     }
