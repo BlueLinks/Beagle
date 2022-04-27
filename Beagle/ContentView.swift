@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct quote: Identifiable {
-    let id = UUID()
+struct quote: Codable, Identifiable {
+    var id = UUID()
     var text: String
 }
 
@@ -70,6 +70,8 @@ struct quoteList: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Button("Finished"){
+                        print(quotes)
+                        UserDefaults.standard.set(try? PropertyListEncoder().encode(quotes), forKey:"quotes")
                         dismiss()
                     }
                 }
@@ -85,13 +87,7 @@ struct quoteList: View {
 struct ContentView: View {
     
     @State private var showingSheet = false
-    @State var quotes: [quote] = [
-        quote(text: "I’ve always believed that you should never, ever give up and you should always keep fighting even when there’s only a slightest chance. – Michael Schumacher"),
-        quote(text: "Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma - which is living with the results of other people's thinking. Don't let the noise of other's opinions drown out your own inner voice. And most important, have the courage to follow your heart and intuition - Steve Jobs"),
-        quote(text: "Faith is taking the first step even when you don’t see the whole staircase. - Martin Luther King Jr"),
-        quote(text: "You miss 100% of the shots you don’t take – Wayne Gretzky"),
-        quote(text: "Keep your eyes on the stars, and your feet on the ground. ― Theodore Roosevelt")
-    ]
+    @State var quotes: [quote] = []
     @State var displayedQuote: String = ""
     @State var showingBone: Bool = false
     
@@ -190,6 +186,23 @@ struct ContentView: View {
                             }
                         }
                     }
+            }
+        }
+        .onAppear {
+            if let data = UserDefaults.standard.value(forKey:"quotes") as? Data {
+                if let quoteData = try? PropertyListDecoder().decode(Array<quote>.self, from: data) {
+                    // Data has been found
+                    quotes = quoteData
+                }
+            } else {
+                // These are the default values
+                quotes = [
+                    quote(text: "I’ve always believed that you should never, ever give up and you should always keep fighting even when there’s only a slightest chance. – Michael Schumacher"),
+                    quote(text: "Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma - which is living with the results of other people's thinking. Don't let the noise of other's opinions drown out your own inner voice. And most important, have the courage to follow your heart and intuition - Steve Jobs"),
+                    quote(text: "Faith is taking the first step even when you don’t see the whole staircase. - Martin Luther King Jr"),
+                    quote(text: "You miss 100% of the shots you don’t take – Wayne Gretzky"),
+                    quote(text: "Keep your eyes on the stars, and your feet on the ground. ― Theodore Roosevelt")
+                ]
             }
         }
     }
