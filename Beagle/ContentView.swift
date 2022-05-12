@@ -86,7 +86,8 @@ struct quoteList: View {
 
 struct ContentView: View {
     
-    @State private var showingSheet = false
+    @State private var showingAddQuoteSheet = false
+    @State private var showingSettingsSheet = false
     @State var quotes: [quote] = []
     @State var displayedQuote: String = ""
     @State var showingBone: Bool = false
@@ -170,16 +171,29 @@ struct ContentView: View {
                     .offset(y: -100)
                 
                 
-                    .sheet(isPresented: $showingSheet){
+                    .sheet(isPresented: $showingAddQuoteSheet){
                         quoteList(quotes: $quotes)
+                    }
+                    .sheet(isPresented: $showingSettingsSheet){
+                        SettingsView()
                     }
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing){
                             Button{
-                                showingSheet.toggle()
+                                showingAddQuoteSheet.toggle()
                             } label: {
                                 Image(systemName: "plus.circle.fill")
+                                    .font(.largeTitle)
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.white, .black)
+                            }
+                        }
+                        ToolbarItem(placement: .navigationBarLeading){
+                            Button{
+                                showingSettingsSheet.toggle()
+                            } label: {
+                                Image(systemName: "gear.circle.fill")
                                     .font(.largeTitle)
                                     .symbolRenderingMode(.palette)
                                     .foregroundStyle(.white, .black)
