@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9315CE2D28132F56006E8E22 /* SpeechBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9315CE2C28132F56006E8E22 /* SpeechBubble.swift */; };
 		9333D31D281ED1C7002A431F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9333D31C281ED1C6002A431F /* SettingsView.swift */; };
+		935CA4A828304B0200EE2F71 /* CustomExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935CA4A728304B0200EE2F71 /* CustomExtensions.swift */; };
 		93DFC3C0280AD8D70091F5E2 /* BeagleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DFC3BF280AD8D70091F5E2 /* BeagleApp.swift */; };
 		93DFC3C2280AD8D70091F5E2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DFC3C1280AD8D70091F5E2 /* ContentView.swift */; };
 		93DFC3C4280AD8E00091F5E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93DFC3C3280AD8E00091F5E2 /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		9315CE2C28132F56006E8E22 /* SpeechBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechBubble.swift; sourceTree = "<group>"; };
 		9333D31C281ED1C6002A431F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		935CA4A728304B0200EE2F71 /* CustomExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExtensions.swift; sourceTree = "<group>"; };
 		93DFC3BC280AD8D70091F5E2 /* Beagle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beagle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93DFC3BF280AD8D70091F5E2 /* BeagleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeagleApp.swift; sourceTree = "<group>"; };
 		93DFC3C1280AD8D70091F5E2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,6 +57,7 @@
 		93DFC3BE280AD8D70091F5E2 /* Beagle */ = {
 			isa = PBXGroup;
 			children = (
+				935CA4A728304B0200EE2F71 /* CustomExtensions.swift */,
 				9333D31C281ED1C6002A431F /* SettingsView.swift */,
 				93DFC3BF280AD8D70091F5E2 /* BeagleApp.swift */,
 				93DFC3C1280AD8D70091F5E2 /* ContentView.swift */,
@@ -145,6 +148,7 @@
 			files = (
 				93DFC3C2280AD8D70091F5E2 /* ContentView.swift in Sources */,
 				9333D31D281ED1C7002A431F /* SettingsView.swift in Sources */,
+				935CA4A828304B0200EE2F71 /* CustomExtensions.swift in Sources */,
 				9315CE2D28132F56006E8E22 /* SpeechBubble.swift in Sources */,
 				93DFC3C0280AD8D70091F5E2 /* BeagleApp.swift in Sources */,
 			);

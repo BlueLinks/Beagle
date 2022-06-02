@@ -6,45 +6,11 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct quote: Codable, Identifiable {
     var id = UUID()
     var text: String
-}
-
-// Credit to https://www.hackingwithswift.com/quick-start/swiftui/how-to-detect-shake-gestures
-// The notification we'll send when a shake gesture happens.
-extension UIDevice {
-    static let deviceDidShakeNotification = Notification.Name(rawValue: "deviceDidShakeNotification")
-}
-
-//  Override the default behavior of shake gestures to send our notification instead.
-extension UIWindow {
-    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {
-            NotificationCenter.default.post(name: UIDevice.deviceDidShakeNotification, object: nil)
-        }
-    }
-}
-
-// A view modifier that detects shaking and calls a function of our choosing.
-struct DeviceShakeViewModifier: ViewModifier {
-    let action: () -> Void
-    
-    func body(content: Content) -> some View {
-        content
-            .onAppear()
-            .onReceive(NotificationCenter.default.publisher(for: UIDevice.deviceDidShakeNotification)) { _ in
-                action()
-            }
-    }
-}
-
-// A View extension to make the modifier easier to use.
-extension View {
-    func onShake(perform action: @escaping () -> Void) -> some View {
-        self.modifier(DeviceShakeViewModifier(action: action))
-    }
 }
 
 struct quoteList: View {
@@ -56,7 +22,7 @@ struct quoteList: View {
             VStack{
                 List {
                     ForEach($quotes) {$quote in
-                        TextField("",text: $quote.text)
+                        TextEditor(text: $quote.text)
                     }
                     .onDelete{ indexSet in
                         quotes.remove(atOffsets: indexSet)
@@ -65,8 +31,13 @@ struct quoteList: View {
                         quotes.append(quote(text: ""))
                     }
                 }
+                .onTapGesture {
+                    // not working :(
+                    self.endTextEditing()
+                }
             }
             .navigationTitle("Add some motivation!")
+            .navigationBarColor(backgroundColor: UIColor(Color("Evening Sea")), titleColor: .white)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Button("Finished"){
@@ -107,10 +78,11 @@ struct ContentView: View {
                 
                 LinearGradient(gradient: Gradient(colors: [
                     .green,
-                    Color(red: 75/255, green: 134/255, blue: 112/255)
+                    Color("Viridian")
                 ]), startPoint: .top, endPoint: .bottom)
-                    .frame(width: 500, height: 500)
-                    .offset(y: 150)
+                .frame(width: 500, height: 500)
+                .offset(y: 150)
+                .edgesIgnoringSafeArea(.bottom)
                 
                 
                 ZStack {
@@ -142,7 +114,7 @@ struct ContentView: View {
                         }
                         .padding()
                         .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
-                        .background(Color(red: 242/255, green: 242/255, blue: 247/255))
+                        .background(Color("Athens Grey"))
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                         .shadow(color: .black, radius: 5, x: 5, y: 5)
                         .foregroundColor(.black)
@@ -175,7 +147,7 @@ struct ContentView: View {
                         quoteList(quotes: $quotes)
                     }
                     .sheet(isPresented: $showingSettingsSheet){
-                        SettingsView()
+                        SettingsView(quotes: $quotes)
                     }
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
@@ -217,6 +189,13 @@ struct ContentView: View {
                     quote(text: "You miss 100% of the shots you don’t take – Wayne Gretzky"),
                     quote(text: "Keep your eyes on the stars, and your feet on the ground. ― Theodore Roosevelt")
                 ]
+            }
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    print("All set!")
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
             }
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct NavigationBarModifier: ViewModifier {
     
@@ -40,17 +41,10 @@ struct NavigationBarModifier: ViewModifier {
     }
 }
 
-extension View {
-    
-    func navigationBarColor(backgroundColor: UIColor?, titleColor: UIColor?) -> some View {
-        self.modifier(NavigationBarModifier(backgroundColor: backgroundColor, titleColor: titleColor))
-    }
-    
-}
-
 struct dayModel : Codable, Identifiable {
     var id = UUID()
     var dayInitial : String
+    var dayOfWeek : Int
     var selected : Bool
 }
 
@@ -85,32 +79,141 @@ struct daySymbol : View {
     }
 }
 
+func scheduleRandomNotif(startTime : Date, endTime: Date, quoteList : [quote], dayToggles : [dayModel]) -> Void {
+    
+    let center = UNUserNotificationCenter.current()
+    
+    for day in dayToggles{
+        
+        let notificationID = "randomTimeMotivation\(day.dayOfWeek)"
+        
+        center.getPendingNotificationRequests(completionHandler: { requests in
+            for request in requests {
+                
+                
+                if request.identifier == notificationID {
+                    
+                    //Notification already exists.
+                    if !day.selected{
+                        // User has unselected the day of the week
+                        center.removePendingNotificationRequests(withIdentifiers: [notificationID])
+                    }
+                    break
+                    
+                } else if request === requests.last && day.selected{
+                    // Notification doesn't exist yet.
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = "Beagle"
+                    content.subtitle = "BARK! Come and get your motivation!"
+                    //                content.subtitle = quoteList.randomElement()?.text ?? ""
+                    
+                    content.sound = UNNotificationSound.default
+                    
+                    // Get Random Time tomorrow
+                    var setDate = DateComponents()
+                    let randomTime = Date.random(in: startTime..<endTime)
+                    setDate.weekday = day.dayOfWeek
+                    setDate.hour = Calendar.current.component(.hour, from: randomTime)
+                    setDate.minute = Calendar.current.component(.minute, from: randomTime)
+                    
+                    
+                    // show this notification five seconds from now
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: setDate, repeats: true)
+                    
+                    // choose a random identifier
+                    let request = UNNotificationRequest(identifier: notificationID, content: content, trigger: trigger)
+                    
+                    // add our notification request
+                    UNUserNotificationCenter.current().add(request)
+                    
+                }
+            }
+        })
+    }
+}
+
+
+func scheduleSetTimeNotif(setTime : Date, quoteList : [quote], dayToggles : [dayModel]) -> Void {
+    
+    let center = UNUserNotificationCenter.current()
+    
+    for day in dayToggles{
+        
+        let notificationID = "setTimeMotivation\(day.dayOfWeek)"
+        
+        center.getPendingNotificationRequests(completionHandler: { requests in
+            for request in requests {
+                
+                
+                if request.identifier == notificationID {
+                    
+                    //Notification already exists.
+                    if !day.selected{
+                        // User has unselected the day of the week
+                        center.removePendingNotificationRequests(withIdentifiers: ["notificationID"])
+                    }
+                    break
+                    
+                } else if request === requests.last && day.selected{
+                    // Notification doesn't exist yet.
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = "Beagle"
+                    content.subtitle = "BARK! Come and get your motivation!"
+                    //                content.subtitle = quoteList.randomElement()?.text ?? ""
+                    
+                    content.sound = UNNotificationSound.default
+                    
+                    // Get set time
+                    var setDate = DateComponents()
+                    setDate.weekday = day.dayOfWeek
+                    setDate.hour = Calendar.current.component(.hour, from: setTime)
+                    setDate.minute = Calendar.current.component(.minute, from: setTime)
+                    
+                    
+                    // show this notification five seconds from now
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: setDate, repeats: true)
+                    
+                    // choose a random identifier
+                    let request = UNNotificationRequest(identifier: notificationID, content: content, trigger: trigger)
+                    
+                    // add our notification request
+                    UNUserNotificationCenter.current().add(request)
+                    
+                }
+            }
+        })
+    }
+}
+
 
 struct SettingsView: View {
     
     @Environment(\.dismiss) var dismiss
+    @Binding var quotes: [quote]
     @AppStorage("randomToggle") var randomOn = false
     @AppStorage("setTimeToggle") var setTimeOn = false
     @State var notificationTime = Date.now
     @State var randomStartTime = Date.now
     @State var randomEndTime = Date.now
     @State var randomDayToggles: [dayModel] = [
-        dayModel(dayInitial: "M", selected: false),
-        dayModel(dayInitial: "T", selected: false),
-        dayModel(dayInitial: "W", selected: false),
-        dayModel(dayInitial: "T", selected: false),
-        dayModel(dayInitial: "F", selected: false),
-        dayModel(dayInitial: "S", selected: false),
-        dayModel(dayInitial: "S", selected: false)
+        dayModel(dayInitial: "M", dayOfWeek: 2, selected: false),
+        dayModel(dayInitial: "T", dayOfWeek: 3, selected: false),
+        dayModel(dayInitial: "W", dayOfWeek: 4, selected: false),
+        dayModel(dayInitial: "T", dayOfWeek: 5, selected: false),
+        dayModel(dayInitial: "F", dayOfWeek: 6, selected: false),
+        dayModel(dayInitial: "S", dayOfWeek: 7, selected: false),
+        dayModel(dayInitial: "S", dayOfWeek: 1, selected: false)
     ]
     @State var setDayToggles: [dayModel] = [
-        dayModel(dayInitial: "M", selected: false),
-        dayModel(dayInitial: "T", selected: false),
-        dayModel(dayInitial: "W", selected: false),
-        dayModel(dayInitial: "T", selected: false),
-        dayModel(dayInitial: "F", selected: false),
-        dayModel(dayInitial: "S", selected: false),
-        dayModel(dayInitial: "S", selected: false)
+        dayModel(dayInitial: "M", dayOfWeek: 2, selected: false),
+        dayModel(dayInitial: "T", dayOfWeek: 3, selected: false),
+        dayModel(dayInitial: "W", dayOfWeek: 4, selected: false),
+        dayModel(dayInitial: "T", dayOfWeek: 5, selected: false),
+        dayModel(dayInitial: "F", dayOfWeek: 6, selected: false),
+        dayModel(dayInitial: "S", dayOfWeek: 7, selected: false),
+        dayModel(dayInitial: "S", dayOfWeek: 1, selected: false)
     ]
     
     var body: some View {
@@ -150,14 +253,21 @@ struct SettingsView: View {
                         .disabled(!setTimeOn)
                         .foregroundColor(setTimeOn ? .white : .gray)
                     }
+                    Button(){
+                        
+                        //scheduleRandomNotif(startTime: randomStartTime, endTime: randomEndTime, quoteList: quotes)
+                        
+                    } label: {
+                        Text("Test notification")
+                    }
                 }
                 
                 .foregroundColor(.white)
-                .listRowBackground(Color(red: 35/255, green: 94/255, blue: 72/255))
+                .listRowBackground(Color("Evening Sea"))
             }
             .background(LinearGradient(gradient: Gradient(colors: [
                 .green,
-                Color(red: 75/255, green: 134/255, blue: 112/255)
+                Color("Viridian")
             ]), startPoint: .top, endPoint: .bottom))
             .onAppear {
                 UITableView.appearance().backgroundColor = .clear
@@ -207,7 +317,7 @@ struct SettingsView: View {
             }
             
             .navigationTitle("Notifications")
-            .navigationBarColor(backgroundColor: UIColor(Color(red: 55/255, green: 114/255, blue: 92/255)), titleColor: .white)
+            .navigationBarColor(backgroundColor: UIColor(Color("Evening Sea")), titleColor: .white)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Button("Finished"){
@@ -217,16 +327,14 @@ struct SettingsView: View {
                         UserDefaults.standard.set(randomStartTime, forKey: "randomStartTime")
                         UserDefaults.standard.set(randomEndTime, forKey: "randomEndTime")
                         
+                        // Notifications
+                        scheduleSetTimeNotif(setTime: notificationTime, quoteList: quotes, dayToggles: setDayToggles)
+                        scheduleRandomNotif(startTime: randomStartTime, endTime: randomEndTime, quoteList: quotes, dayToggles: randomDayToggles)
+                        
                         dismiss()
                     }
                 }
             }
         }
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
     }
 }
