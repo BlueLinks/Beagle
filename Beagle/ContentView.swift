@@ -13,6 +13,15 @@ struct quote: Codable, Identifiable {
     var text: String
 }
 
+struct QuoteBox: View {
+    
+    @Binding var currentQuote : quote
+    
+    var body: some View {
+        TextField("", text: $currentQuote.text, axis: .vertical)
+    }
+}
+
 struct quoteList: View {
     @Environment(\.dismiss) var dismiss
     @Binding var quotes: [quote]
@@ -20,24 +29,29 @@ struct quoteList: View {
     var body: some View {
         NavigationView{
             VStack{
-                List {
+                List{
                     ForEach($quotes) {$quote in
-                        TextEditor(text: $quote.text)
+                        QuoteBox(currentQuote: $quote)
                     }
                     .onDelete{ indexSet in
                         quotes.remove(atOffsets: indexSet)
                     }
-                    Button("Add quote"){
-                        quotes.append(quote(text: ""))
+                    HStack{
+                        Spacer()
+                        Button{
+                            quotes.append(quote(text: ""))
+                        } label: {
+                            Text("Add quote")
+                                .foregroundColor(Color.white)
+                                .padding()
+                                .background(Color("Evening Sea"))
+                                .clipShape(Capsule())
+                        }
+                        Spacer()
                     }
-                }
-                .onTapGesture {
-                    // not working :(
-                    self.endTextEditing()
                 }
             }
             .navigationTitle("Add some motivation!")
-            .navigationBarColor(backgroundColor: UIColor(Color("Evening Sea")), titleColor: .white)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Button("Finished"){
@@ -50,6 +64,7 @@ struct quoteList: View {
                     EditButton()
                 }
             }
+            
         }
     }
 }
@@ -66,7 +81,6 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             ZStack{
-                
                 LinearGradient(gradient: Gradient(colors: [.blue, .yellow]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
                 
                 Text("☁️")
@@ -80,8 +94,8 @@ struct ContentView: View {
                     .green,
                     Color("Viridian")
                 ]), startPoint: .top, endPoint: .bottom)
-                .frame(width: 500, height: 500)
-                .offset(y: 150)
+                .frame(width: 500)
+                .offset(y: 265)
                 .edgesIgnoringSafeArea(.bottom)
                 
                 
