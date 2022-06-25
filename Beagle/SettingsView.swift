@@ -79,111 +79,91 @@ struct daySymbol : View {
     }
 }
 
-func scheduleRandomNotif(startTime : Date, endTime: Date, quoteList : [quote], dayToggles : [dayModel]) -> Void {
+func doesNotifAlreadyExist(notifCenter : UNUserNotificationCenter, notificationID : String, day : dayModel) -> Bool {
+    var notificationAlreadyExists = false
+    notifCenter.getPendingNotificationRequests(completionHandler: { requests in
+        for request in requests {
+            if request.identifier == notificationID {
+                print("Notification already exists")
+                notificationAlreadyExists = true
+                //Notification already exists.
+                if !day.selected{
+                    // User has unselected the day of the week
+                    notifCenter.removePendingNotificationRequests(withIdentifiers: ["notificationID"])
+                }
+                break
+                
+            }
+        }
+    })
+    return notificationAlreadyExists
+}
+
+func createNotif(notifCenter : UNUserNotificationCenter, setDate : DateComponents, notificationID : String){
+    let content = UNMutableNotificationContent()
+    content.title = "Beagle"
+    content.subtitle = "BARK! Come and get your motivation!"
+    //    content.subtitle = quoteList.randomElement()?.text ?? ""
+    content.sound = UNNotificationSound.default
     
+    print("Attempting to set notification for \(setDate)")
+    let trigger = UNCalendarNotificationTrigger(dateMatching: setDate, repeats: true)
+    let request = UNNotificationRequest(identifier: notificationID, content: content, trigger: trigger)
+    
+    // add our notification request
+    notifCenter.add(request)
+}
+
+func scheduleRandomNotif(startTime : Date, endTime: Date, quoteList : [quote], dayToggles : [dayModel]) -> Void {
+    var notificationAlreadyExists = false
     let center = UNUserNotificationCenter.current()
     
     for day in dayToggles{
         
         let notificationID = "randomTimeMotivation\(day.dayOfWeek)"
         
-        center.getPendingNotificationRequests(completionHandler: { requests in
-            for request in requests {
-                
-                
-                if request.identifier == notificationID {
-                    
-                    //Notification already exists.
-                    if !day.selected{
-                        // User has unselected the day of the week
-                        center.removePendingNotificationRequests(withIdentifiers: [notificationID])
-                    }
-                    break
-                    
-                } else if request === requests.last && day.selected{
-                    // Notification doesn't exist yet.
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "Beagle"
-                    content.subtitle = "BARK! Come and get your motivation!"
-                    //                content.subtitle = quoteList.randomElement()?.text ?? ""
-                    
-                    content.sound = UNNotificationSound.default
-                    
-                    // Get Random Time tomorrow
-                    var setDate = DateComponents()
-                    let randomTime = Date.random(in: startTime..<endTime)
-                    setDate.weekday = day.dayOfWeek
-                    setDate.hour = Calendar.current.component(.hour, from: randomTime)
-                    setDate.minute = Calendar.current.component(.minute, from: randomTime)
-                    
-                    
-                    // show this notification five seconds from now
-                    let trigger = UNCalendarNotificationTrigger(dateMatching: setDate, repeats: true)
-                    
-                    // choose a random identifier
-                    let request = UNNotificationRequest(identifier: notificationID, content: content, trigger: trigger)
-                    
-                    // add our notification request
-                    UNUserNotificationCenter.current().add(request)
-                    
-                }
-            }
-        })
+        notificationAlreadyExists = doesNotifAlreadyExist(notifCenter: center, notificationID: notificationID, day: day)
+        
+        if !notificationAlreadyExists && day.selected{
+            // Notification doesn't exist yet.
+            print("Notification doesn't exist yet")
+            
+            // Get Random Time tomorrow
+            var setDate = DateComponents()
+            let randomTime = Date.random(in: startTime..<endTime)
+            setDate.weekday = day.dayOfWeek
+            setDate.hour = Calendar.current.component(.hour, from: randomTime)
+            setDate.minute = Calendar.current.component(.minute, from: randomTime)
+            
+            createNotif(notifCenter: center, setDate: setDate, notificationID: notificationID)
+            
+        }
     }
 }
 
-
 func scheduleSetTimeNotif(setTime : Date, quoteList : [quote], dayToggles : [dayModel]) -> Void {
-    
+    var notificationAlreadyExists = false
     let center = UNUserNotificationCenter.current()
     
     for day in dayToggles{
         
         let notificationID = "setTimeMotivation\(day.dayOfWeek)"
         
-        center.getPendingNotificationRequests(completionHandler: { requests in
-            for request in requests {
-                
-                
-                if request.identifier == notificationID {
-                    
-                    //Notification already exists.
-                    if !day.selected{
-                        // User has unselected the day of the week
-                        center.removePendingNotificationRequests(withIdentifiers: ["notificationID"])
-                    }
-                    break
-                    
-                } else if request === requests.last && day.selected{
-                    // Notification doesn't exist yet.
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "Beagle"
-                    content.subtitle = "BARK! Come and get your motivation!"
-                    //                content.subtitle = quoteList.randomElement()?.text ?? ""
-                    
-                    content.sound = UNNotificationSound.default
-                    
-                    // Get set time
-                    var setDate = DateComponents()
-                    setDate.weekday = day.dayOfWeek
-                    setDate.hour = Calendar.current.component(.hour, from: setTime)
-                    setDate.minute = Calendar.current.component(.minute, from: setTime)
-                    
-                    
-                    // show this notification five seconds from now
-                    let trigger = UNCalendarNotificationTrigger(dateMatching: setDate, repeats: true)
-                    
-                    // choose a random identifier
-                    let request = UNNotificationRequest(identifier: notificationID, content: content, trigger: trigger)
-                    
-                    // add our notification request
-                    UNUserNotificationCenter.current().add(request)
-                    
-                }
-            }
-        })
+        notificationAlreadyExists = doesNotifAlreadyExist(notifCenter: center, notificationID: notificationID, day: day)
+        
+        if !notificationAlreadyExists && day.selected{
+            // Notification doesn't exist yet.
+            print("Notification doesn't exist yet")
+            
+            // Get set time
+            var setDate = DateComponents()
+            setDate.weekday = day.dayOfWeek
+            setDate.hour = Calendar.current.component(.hour, from: setTime)
+            setDate.minute = Calendar.current.component(.minute, from: setTime)
+            
+            createNotif(notifCenter: center, setDate: setDate, notificationID: notificationID)
+            
+        }
     }
 }
 
@@ -261,16 +241,9 @@ struct SettingsView: View {
                         Text("Test notification")
                     }
                 }
-                
-                .foregroundColor(.white)
-                .listRowBackground(Color("Evening Sea"))
             }
-            .background(LinearGradient(gradient: Gradient(colors: [
-                .green,
-                Color("Viridian")
-            ]), startPoint: .top, endPoint: .bottom))
+            
             .onAppear {
-                UITableView.appearance().backgroundColor = .clear
                 
                 
                 if let data = UserDefaults.standard.value(forKey:"randomDayToggles") as? Data {
@@ -317,10 +290,10 @@ struct SettingsView: View {
             }
             
             .navigationTitle("Notifications")
-            .navigationBarColor(backgroundColor: UIColor(Color("Evening Sea")), titleColor: .white)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading){
                     Button("Finished"){
+                        print("User Finished")
                         UserDefaults.standard.set(try? PropertyListEncoder().encode(randomDayToggles), forKey:"randomDayToggles")
                         UserDefaults.standard.set(try? PropertyListEncoder().encode(setDayToggles), forKey:"setDayToggles")
                         UserDefaults.standard.set(notificationTime, forKey: "notificationTime")
