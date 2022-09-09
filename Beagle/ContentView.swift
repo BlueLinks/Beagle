@@ -77,86 +77,101 @@ struct ContentView: View {
     @State var quotes: [quote] = []
     @State var displayedQuote: String = ""
     @State var showingBone: Bool = false
+    @State var bouncing : Bool = false
+    
     
     var body: some View {
-        NavigationView{
-            ZStack{
-                LinearGradient(gradient: Gradient(colors: [.blue, .yellow]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+        GeometryReader{ geo in
+            NavigationView{
                 
-                Text("☁️")
-                    .font(.title)
-                    .offset(x: 120, y: -300)
-                Text("☁️")
-                    .font(.title)
-                    .offset(x: -120, y: -325)
-                
-                LinearGradient(gradient: Gradient(colors: [
-                    .green,
-                    Color("Viridian")
-                ]), startPoint: .top, endPoint: .bottom)
-                .frame(width: 500)
-                .offset(y: 265)
-                .edgesIgnoringSafeArea(.bottom)
-                
-                
-                ZStack {
-                    SpeechBubble()
-                        .fill(.white)
-                        .shadow(color: .black, radius: 5, x: 5, y: 5)
-                    Text("Shake for some motivation!").padding(10)
-                }
-                .frame(width: 300, height: 70)
-                .onShake {
-                    withAnimation{
-                        if !showingBone {
-                            displayedQuote = quotes.randomElement()?.text ?? ""
-                        }
-                        self.showingBone = true
-                    }
-                }
-                .foregroundColor(.black)
-                .offset(y:-200)
-                
-                VStack(spacing: 150){
+                ZStack(alignment: .bottom){
+                    LinearGradient(gradient: Gradient(colors: [.blue, .yellow]), startPoint: .top, endPoint: .bottom)
+                        .edgesIgnoringSafeArea(.all)
+                        .frame(height: geo.size.height)
                     
-                    if showingBone{
-                        HStack{
-                            Image(systemName: "pawprint.circle")
-                            Divider()
-                            Text(displayedQuote)
-                                .id("Quote" + displayedQuote)
-                        }
-                        .padding()
-                        .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
-                        .background(Color("Athens Grey"))
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
-                        .shadow(color: .black, radius: 5, x: 5, y: 5)
-                        .foregroundColor(.black)
-                        .transition(.asymmetric(insertion: .scale, removal: .opacity))
-                        .offset(y: 175)
+                    ZStack(alignment: .top){
+                        LinearGradient(gradient: Gradient(colors: [.green,Color("Viridian")]), startPoint: .top, endPoint: .bottom)
+                            .edgesIgnoringSafeArea(.bottom)
+                            .frame(height: geo.size.height*0.65)
+                            .ignoresSafeArea()
+                        Text("🐶")
+                            .font(.largeTitle).offset(y: -20)
                         
-                        Button{
-                            withAnimation{
-                                self.showingBone = false
-                                displayedQuote = ""
-                            }
-                        } label: {
-                            Image(systemName: "arrow.uturn.backward.circle.fill")
-                                .font(.largeTitle)
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.white, .black)
+                        Text("☁️")
+                            .font(.title)
+                            .offset(x: 120, y: -220)
+                        Text("☁️")
+                            .font(.title)
+                            .offset(x: -120, y: -180)
+                        
+                        
+                        ZStack {
+                            SpeechBubble()
+                                .fill(.white)
                                 .shadow(color: .black, radius: 5, x: 5, y: 5)
-                        }.offset(y: 75)
+                                .frame(width: 300, height: 70)
+                            Text("Shake for some motivation!").padding(10)
+                        }.offset(y: bouncing ? -110 : -115)
+                            .animation(Animation.easeInOut(duration: 2).repeatForever(), value: self.bouncing)
+                            .onAppear {
+                                self.bouncing.toggle()
+                            }
+                            .onShake {
+                                withAnimation{
+                                    if !showingBone {
+                                        displayedQuote = quotes.randomElement()?.text ?? ""
+                                    }
+                                    self.showingBone = true
+                                }
+                            }
+                            .foregroundColor(.black)
+                        
+                        
+                        
+                        
+                        VStack(){
+                            
+                            Spacer()
+                            
+                            if showingBone{
+                                HStack{
+                                    Image(systemName: "pawprint.circle")
+                                    Divider()
+                                    Text(displayedQuote)
+                                        .id("Quote" + displayedQuote)
+                                }
+                                .padding()
+                                .frame(minWidth: 100, maxWidth: 350, minHeight: 0, maxHeight: 250)
+                                .background(Color("Athens Grey"))
+                                .clipShape(RoundedRectangle(cornerRadius: 30))
+                                .shadow(color: .black, radius: 5, x: 5, y: 5)
+                                .foregroundColor(.black)
+                                .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                                
+                                Spacer()
+                                
+                                Button{
+                                    withAnimation{
+                                        self.showingBone = false
+                                        displayedQuote = ""
+                                    }
+                                } label: {
+                                    Image(systemName: "arrow.uturn.backward.circle.fill")
+                                        .font(.largeTitle)
+                                        .symbolRenderingMode(.palette)
+                                        .foregroundStyle(.white, .black)
+                                        .shadow(color: .black, radius: 5, x: 5, y: 5)
+                                }
+                                
+                                Spacer()
+                                
+                            }
+                            
+                        }.frame(height: geo.size.height*0.65)
                         
                     }
                     
-                }
-                
-                Text("🐶")
-                    .font(.largeTitle)
-                    .offset(y: -100)
-                
-                
+                    
                     .sheet(isPresented: $showingAddQuoteSheet){
                         quoteList(quotes: $quotes)
                     }
@@ -186,6 +201,7 @@ struct ContentView: View {
                             }
                         }
                     }
+                }
             }
         }
         .onAppear {

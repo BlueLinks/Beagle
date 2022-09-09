@@ -9,7 +9,10 @@
 /* Begin PBXBuildFile section */
 		9315CE2D28132F56006E8E22 /* SpeechBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9315CE2C28132F56006E8E22 /* SpeechBubble.swift */; };
 		9333D31D281ED1C7002A431F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9333D31C281ED1C6002A431F /* SettingsView.swift */; };
+		9351053A284FFA5D00C00C72 /* TextView in Frameworks */ = {isa = PBXBuildFile; productRef = 93510539284FFA5D00C00C72 /* TextView */; };
 		935CA4A828304B0200EE2F71 /* CustomExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935CA4A728304B0200EE2F71 /* CustomExtensions.swift */; };
+		93A7A31E284FF3EE006FFC0A /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 93A7A31D284FF3EE006FFC0A /* Introspect */; };
+		93A7A320284FF96B006FFC0A /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A7A31F284FF96A006FFC0A /* TextView.swift */; };
 		93DFC3C0280AD8D70091F5E2 /* BeagleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DFC3BF280AD8D70091F5E2 /* BeagleApp.swift */; };
 		93DFC3C2280AD8D70091F5E2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DFC3C1280AD8D70091F5E2 /* ContentView.swift */; };
 		93DFC3C4280AD8E00091F5E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93DFC3C3280AD8E00091F5E2 /* Assets.xcassets */; };
@@ -20,6 +23,7 @@
 		9315CE2C28132F56006E8E22 /* SpeechBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechBubble.swift; sourceTree = "<group>"; };
 		9333D31C281ED1C6002A431F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		935CA4A728304B0200EE2F71 /* CustomExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomExtensions.swift; sourceTree = "<group>"; };
+		93A7A31F284FF96A006FFC0A /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		93DFC3BC280AD8D70091F5E2 /* Beagle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beagle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93DFC3BF280AD8D70091F5E2 /* BeagleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeagleApp.swift; sourceTree = "<group>"; };
 		93DFC3C1280AD8D70091F5E2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -32,6 +36,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9351053A284FFA5D00C00C72 /* TextView in Frameworks */,
+				93A7A31E284FF3EE006FFC0A /* Introspect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +70,7 @@
 				9315CE2C28132F56006E8E22 /* SpeechBubble.swift */,
 				93DFC3C3280AD8E00091F5E2 /* Assets.xcassets */,
 				93DFC3C5280AD8E00091F5E2 /* Preview Content */,
+				93A7A31F284FF96A006FFC0A /* TextView.swift */,
 			);
 			path = Beagle;
 			sourceTree = "<group>";
@@ -92,6 +99,10 @@
 			dependencies = (
 			);
 			name = Beagle;
+			packageProductDependencies = (
+				93A7A31D284FF3EE006FFC0A /* Introspect */,
+				93510539284FFA5D00C00C72 /* TextView */,
+			);
 			productName = Beagle;
 			productReference = 93DFC3BC280AD8D70091F5E2 /* Beagle.app */;
 			productType = "com.apple.product-type.application";
@@ -120,6 +131,10 @@
 				Base,
 			);
 			mainGroup = 93DFC3B3280AD8D70091F5E2;
+			packageReferences = (
+				93A7A31C284FF3EE006FFC0A /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
+				93510538284FFA5D00C00C72 /* XCRemoteSwiftPackageReference "TextView" */,
+			);
 			productRefGroup = 93DFC3BD280AD8D70091F5E2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -149,6 +164,7 @@
 				93DFC3C2280AD8D70091F5E2 /* ContentView.swift in Sources */,
 				9333D31D281ED1C7002A431F /* SettingsView.swift in Sources */,
 				935CA4A828304B0200EE2F71 /* CustomExtensions.swift in Sources */,
+				93A7A320284FF96B006FFC0A /* TextView.swift in Sources */,
 				9315CE2D28132F56006E8E22 /* SpeechBubble.swift in Sources */,
 				93DFC3C0280AD8D70091F5E2 /* BeagleApp.swift in Sources */,
 			);
@@ -207,7 +223,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -261,7 +277,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -351,6 +367,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		93510538284FFA5D00C00C72 /* XCRemoteSwiftPackageReference "TextView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUI-Plus/TextView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		93A7A31C284FF3EE006FFC0A /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		93510539284FFA5D00C00C72 /* TextView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 93510538284FFA5D00C00C72 /* XCRemoteSwiftPackageReference "TextView" */;
+			productName = TextView;
+		};
+		93A7A31D284FF3EE006FFC0A /* Introspect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 93A7A31C284FF3EE006FFC0A /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			productName = Introspect;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 93DFC3B4280AD8D70091F5E2 /* Project object */;
 }
